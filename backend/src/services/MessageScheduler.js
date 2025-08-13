@@ -2,25 +2,42 @@ const Project = require('../models/Project');
 const Message = require('../models/Message');
 const { pool } = require('../database/connection_pool');
 
+const BATCH_SIZE = 100; // Process 100 projects at a time
+
 class MessageScheduler {
   static async run() {
-    const projects = await this.getAllProjects();
+    let offset = 0;
+    let hasMoreProjects = true;
 
-    for (const project of projects) {
-      try {
-        await this.processProject(project);
-      } catch (error) {
-        console.error(`Error processing project ${project.id}:`, error);
+    while (hasMoreProjects) {
+      const projects = await this.getProjectsBatch(offset, BATCH_SIZE);
+
+      if (projects.length === 0) {
+        hasMoreProjects = false;
+        continue;
       }
+
+      for (const project of projects) {
+        try {
+          await this.processProject(project);
+        } catch (error) {
+          console.error(`Error processing project ${project.id}:`, error);
+        }
+      }
+
+      offset += BATCH_SIZE;
     }
   }
 
-  static async getAllProjects() {
+  static async getProjectsBatch(offset, limit) {
     const query = `
       SELECT id, user_id, name, message_interval, interval_unit
       FROM projects
+      ORDER BY id
+      OFFSET $1
+      LIMIT $2
     `;
-    const result = await pool.query(query);
+    const result = await pool.query(query, [offset, limit]);
     return result.rows.map(row => new Project({
       id: row.id,
       userId: row.user_id,

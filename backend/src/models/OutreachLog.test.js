@@ -1,11 +1,8 @@
 const OutreachLog = require('./OutreachLog');
 const { pool } = require('../database/connection_pool');
 
-jest.mock('../database/connection_pool', () => ({
-  pool: {
-    query: jest.fn(),
-  },
-}));
+// Mock our own utility module
+jest.mock('../database/connection_pool');
 
 describe('OutreachLog Model', () => {
   afterEach(() => {
