@@ -282,6 +282,15 @@ class User extends CachedModel {
   }
 
   /**
+   * Get user's projects
+   * @returns {Promise<Array>} - Array of projects
+   */
+  async getProjects() {
+    const { Project } = require('./Project');
+    return Project.findByUserId(this.id);
+  }
+
+  /**
    * Calculate time and money saved
    * @returns {Promise<Object>} - Time and money saved
    */

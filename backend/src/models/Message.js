@@ -11,12 +11,14 @@ const CachedModel = require('./CachedModel');
 const cache = require('../utils/cache');
 const scheduler = require('../utils/scheduler');
 const redisPubSub = require('../utils/redisPubSub');
+const OutreachLog = require('./OutreachLog');
 
 class Message extends CachedModel {
   constructor(data = {}) {
     super();
     this.id = data.id || null;
     this.userId = data.userId || null;
+    this.projectId = data.projectId || null;
     this.platformId = data.platformId || null;
     this.recipient = data.recipient || '';
     this.subject = data.subject || '';
@@ -39,18 +41,19 @@ class Message extends CachedModel {
   static async create(messageData) {
     const query = `
       INSERT INTO messages (
-        user_id, platform_id, recipient, subject, content, status,
+        user_id, project_id, platform_id, recipient, subject, content, status,
         response_received, follow_up_count, follow_up_scheduled,
         follow_up_date, unresponsive_flagged, created_at, updated_at
       )
-      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, NOW(), NOW())
-      RETURNING id, user_id, platform_id, recipient, subject, content, status,
+      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, NOW(), NOW())
+      RETURNING id, user_id, project_id, platform_id, recipient, subject, content, status,
                 response_received, follow_up_count, follow_up_scheduled,
                 follow_up_date, unresponsive_flagged, created_at, updated_at
     `;
 
     const values = [
       messageData.userId,
+      messageData.projectId,
       messageData.platformId,
       messageData.recipient,
       messageData.subject,
@@ -68,6 +71,7 @@ class Message extends CachedModel {
       const message = new Message({
         id: result.rows[0].id,
         userId: result.rows[0].user_id,
+        projectId: result.rows[0].project_id,
         platformId: result.rows[0].platform_id,
         recipient: result.rows[0].recipient,
         subject: result.rows[0].subject,
@@ -110,7 +114,7 @@ class Message extends CachedModel {
     }
 
     const query = `
-      SELECT id, user_id, platform_id, recipient, subject, content, status,
+      SELECT id, user_id, project_id, platform_id, recipient, subject, content, status,
              response_received, follow_up_count, follow_up_scheduled,
              follow_up_date, unresponsive_flagged, created_at, updated_at
       FROM messages
@@ -126,6 +130,7 @@ class Message extends CachedModel {
     const message = new Message({
       id: result.rows[0].id,
       userId: result.rows[0].user_id,
+      projectId: result.rows[0].project_id,
       platformId: result.rows[0].platform_id,
       recipient: result.rows[0].recipient,
       subject: result.rows[0].subject,
@@ -157,7 +162,7 @@ class Message extends CachedModel {
     const offset = options.offset || 0;
     
     let query = `
-      SELECT id, user_id, platform_id, recipient, subject, content, status,
+      SELECT id, user_id, project_id, platform_id, recipient, subject, content, status,
              response_received, follow_up_count, follow_up_scheduled,
              follow_up_date, unresponsive_flagged, created_at, updated_at
       FROM messages
@@ -185,6 +190,7 @@ class Message extends CachedModel {
     return result.rows.map(row => new Message({
       id: row.id,
       userId: row.user_id,
+      projectId: row.project_id,
       platformId: row.platform_id,
       recipient: row.recipient,
       subject: row.subject,
@@ -209,6 +215,12 @@ class Message extends CachedModel {
     const fields = [];
     const values = [];
     let paramIndex = 1;
+
+    if (messageData.projectId !== undefined) {
+      fields.push(`project_id = $${paramIndex++}`);
+      values.push(messageData.projectId);
+      this.projectId = messageData.projectId;
+    }
 
     if (messageData.recipient !== undefined) {
       fields.push(`recipient = $${paramIndex++}`);
@@ -277,7 +289,7 @@ class Message extends CachedModel {
       UPDATE messages
       SET ${fields.join(', ')}
       WHERE id = $${paramIndex}
-      RETURNING id, user_id, platform_id, recipient, subject, content, status,
+      RETURNING id, user_id, project_id, platform_id, recipient, subject, content, status,
                 response_received, follow_up_count, follow_up_scheduled,
                 follow_up_date, unresponsive_flagged, created_at, updated_at
     `;
@@ -287,6 +299,7 @@ class Message extends CachedModel {
     const updatedMessage = new Message({
       id: result.rows[0].id,
       userId: result.rows[0].user_id,
+      projectId: result.rows[0].project_id,
       platformId: result.rows[0].platform_id,
       recipient: result.rows[0].recipient,
       subject: result.rows[0].subject,
@@ -331,9 +344,20 @@ class Message extends CachedModel {
       throw new Error('Only draft messages can be sent');
     }
 
+    // Check for recent outreach
+    const hasBeenContacted = await OutreachLog.hasBeenContactedRecently(this.userId, this.recipient);
+    if (hasBeenContacted) {
+      throw new Error('This recipient has been contacted within the last month.');
+    }
+
     // In a real implementation, this would integrate with the platform's API
     // For now, we'll simulate sending by updating the status
-    return this.update({ status: 'sent' });
+    const sentMessage = await this.update({ status: 'sent' });
+
+    // Log the outreach
+    await OutreachLog.create(this.userId, this.recipient);
+
+    return sentMessage;
   }
 
   /**
