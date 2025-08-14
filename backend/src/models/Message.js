@@ -344,79 +344,33 @@ class Message extends CachedModel {
       throw new Error('Only draft messages can be sent');
     }
 
-    // Check for recent outreach
+    // Check for recent outreach (spam prevention)
     const hasBeenContacted = await OutreachLog.hasBeenContactedRecently(this.userId, this.recipient);
     if (hasBeenContacted) {
       throw new Error('This recipient has been contacted within the last month.');
     }
 
-    // In a real implementation, this would integrate with the platform's API
-    // For now, we'll simulate sending by updating the status
+    // Update status to 'sent'
     const sentMessage = await this.update({ status: 'sent' });
 
     // Log the outreach
     await OutreachLog.create(this.userId, this.recipient);
 
-    return sentMessage;
-  }
+    // After sending, schedule the first follow-up from the sequence
+    const FollowUpTemplate = require('./FollowUpTemplate');
+    const templates = await FollowUpTemplate.findByProjectId(this.projectId);
+    const firstTemplate = templates[0];
 
-  /**
-   * Schedule a follow-up for this message
-   * @param {number} days - Days to wait before follow-up
-   * @returns {Promise<Message>} - Updated message
-   */
-  async scheduleFollowUp(days) {
-    if (this.status !== 'sent') {
-      throw new Error('Only sent messages can have follow-ups scheduled');
-    }
-
-    if (this.responseReceived) {
-      throw new Error('Cannot schedule follow-up for messages that received a response');
-    }
-
-    if (this.unresponsiveFlagged) {
-      throw new Error('Cannot schedule follow-up for unresponsive recipients');
-    }
-
-    const followUpDate = new Date();
-    followUpDate.setDate(followUpDate.getDate() + days);
-
-    return this.update({
-      followUpScheduled: true,
-      followUpDate
-    });
-  }
-
-  /**
-   * Process a follow-up for this message
-   * @returns {Promise<Message>} - Updated message with follow-up sent
-   */
-  async processFollowUp() {
-    if (!this.followUpScheduled) {
-      throw new Error('No follow-up scheduled for this message');
-    }
-
-    if (this.responseReceived) {
-      // Cancel follow-up if response was received
-      return this.update({
-        followUpScheduled: false,
-        followUpDate: null
+    if (firstTemplate) {
+      const followUpDate = new Date();
+      followUpDate.setDate(followUpDate.getDate() + firstTemplate.delayDays);
+      await this.update({
+        followUpScheduled: true,
+        followUpDate: followUpDate,
       });
     }
 
-    // Check if recipient should be flagged as unresponsive
-    // Flag after 3 follow-ups
-    const newFollowUpCount = this.followUpCount + 1;
-    const shouldFlagUnresponsive = newFollowUpCount >= 3;
-
-    // In a real implementation, this would send the follow-up via the platform's API
-    // For now, we'll simulate by updating the follow-up count
-    return this.update({
-      followUpCount: newFollowUpCount,
-      followUpScheduled: !shouldFlagUnresponsive,
-      followUpDate: null,
-      unresponsiveFlagged: shouldFlagUnresponsive
-    });
+    return sentMessage;
   }
 
   /**
