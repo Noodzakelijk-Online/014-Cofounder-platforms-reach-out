@@ -1,9 +1,9 @@
 const { Pool } = require('pg');
+const logger = require('../utils/logger');
 
 // Check for the DATABASE_URL environment variable.
-// In a real production environment, this should be set.
 if (!process.env.DATABASE_URL) {
-  console.warn(
+  logger.warn(
     'DATABASE_URL environment variable is not set. Using default local configuration.'
   );
 }
@@ -21,7 +21,7 @@ const pool = new Pool({
 // The pool will emit an error on behalf of any idle clients
 // it contains if a backend error or network partition happens
 pool.on('error', (err, client) => {
-  console.error('Unexpected error on idle client', err);
+  logger.error({ err, clientId: client.processID }, 'Unexpected error on idle client');
   process.exit(-1);
 });
 

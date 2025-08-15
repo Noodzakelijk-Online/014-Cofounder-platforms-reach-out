@@ -1,12 +1,13 @@
 const MessageScheduler = require('../backend/src/services/MessageScheduler');
+const logger = require('../backend/src/utils/logger');
 
 async function run() {
-  console.log('Running message scheduler...');
+  logger.info('Running message scheduler...');
   try {
     await MessageScheduler.run();
-    console.log('Message scheduler finished successfully.');
+    logger.info('Message scheduler finished successfully.');
   } catch (error) {
-    console.error('Error running message scheduler:', error);
+    logger.error({ err: error }, 'Error running message scheduler');
     process.exit(1);
   }
   process.exit(0);

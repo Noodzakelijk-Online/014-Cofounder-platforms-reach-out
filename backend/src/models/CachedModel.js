@@ -5,7 +5,7 @@
  * It provides common caching functionality and methods.
  */
 
-const cache = require('../utils/cache');
+const { cache } = require('../utils/cache');
 
 class CachedModel {
   constructor() {

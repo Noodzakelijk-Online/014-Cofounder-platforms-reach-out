@@ -5,5 +5,6 @@ module.exports = {
   moduleNameMapper: {
     '^pg$': '<rootDir>/__mocks__/pg.js',
     '^redis$': '<rootDir>/__mocks__/redis.js',
+    '^pino$': '<rootDir>/__mocks__/pino.js',
   },
 };

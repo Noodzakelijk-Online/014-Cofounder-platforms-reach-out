@@ -8,7 +8,7 @@
 
 const { pool } = require('../database/connection_pool');
 const CachedModel = require('./CachedModel');
-const cache = require('../utils/cache');
+const { cache } = require('../utils/cache');
 const scheduler = require('../utils/scheduler');
 const redisPubSub = require('../utils/redisPubSub');
 const OutreachLog = require('./OutreachLog');
@@ -23,6 +23,7 @@ class Message extends CachedModel {
     this.recipient = data.recipient || '';
     this.subject = data.subject || '';
     this.content = data.content || '';
+    this.metadata = data.metadata || {}; // To store placeholders like {firstName: 'John'}
     this.status = data.status || 'draft'; // draft, sent, responded, unresponsive
     this.responseReceived = data.responseReceived || false;
     this.followUpCount = data.followUpCount || 0;
@@ -41,14 +42,12 @@ class Message extends CachedModel {
   static async create(messageData) {
     const query = `
       INSERT INTO messages (
-        user_id, project_id, platform_id, recipient, subject, content, status,
+        user_id, project_id, platform_id, recipient, subject, content, metadata, status,
         response_received, follow_up_count, follow_up_scheduled,
         follow_up_date, unresponsive_flagged, created_at, updated_at
       )
-      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, NOW(), NOW())
-      RETURNING id, user_id, project_id, platform_id, recipient, subject, content, status,
-                response_received, follow_up_count, follow_up_scheduled,
-                follow_up_date, unresponsive_flagged, created_at, updated_at
+      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, NOW(), NOW())
+      RETURNING *
     `;
 
     const values = [
@@ -58,6 +57,7 @@ class Message extends CachedModel {
       messageData.recipient,
       messageData.subject,
       messageData.content,
+      messageData.metadata || {},
       messageData.status || 'draft',
       messageData.responseReceived || false,
       messageData.followUpCount || 0,
@@ -68,23 +68,7 @@ class Message extends CachedModel {
 
     try {
       const result = await pool.query(query, values);
-      const message = new Message({
-        id: result.rows[0].id,
-        userId: result.rows[0].user_id,
-        projectId: result.rows[0].project_id,
-        platformId: result.rows[0].platform_id,
-        recipient: result.rows[0].recipient,
-        subject: result.rows[0].subject,
-        content: result.rows[0].content,
-        status: result.rows[0].status,
-        responseReceived: result.rows[0].response_received,
-        followUpCount: result.rows[0].follow_up_count,
-        followUpScheduled: result.rows[0].follow_up_scheduled,
-        followUpDate: result.rows[0].follow_up_date,
-        unresponsiveFlagged: result.rows[0].unresponsive_flagged,
-        createdAt: result.rows[0].created_at,
-        updatedAt: result.rows[0].updated_at
-      });
+      const message = new Message(Message.mapRow(result.rows[0]));
 
       // Invalidate cache
       await cache.del(`messages:${message.id}`);
@@ -127,23 +111,7 @@ class Message extends CachedModel {
       return null;
     }
 
-    const message = new Message({
-      id: result.rows[0].id,
-      userId: result.rows[0].user_id,
-      projectId: result.rows[0].project_id,
-      platformId: result.rows[0].platform_id,
-      recipient: result.rows[0].recipient,
-      subject: result.rows[0].subject,
-      content: result.rows[0].content,
-      status: result.rows[0].status,
-      responseReceived: result.rows[0].response_received,
-      followUpCount: result.rows[0].follow_up_count,
-      followUpScheduled: result.rows[0].follow_up_scheduled,
-      followUpDate: result.rows[0].follow_up_date,
-      unresponsiveFlagged: result.rows[0].unresponsive_flagged,
-      createdAt: result.rows[0].created_at,
-      updatedAt: result.rows[0].updated_at
-    });
+    const message = new Message(Message.mapRow(result.rows[0]));
 
     // Cache the message
     await cache.set(`messages:${id}`, JSON.stringify(message), 3600); // Cache for 1 hour
@@ -187,7 +155,14 @@ class Message extends CachedModel {
     
     const result = await pool.query(query, queryParams);
     
-    return result.rows.map(row => new Message({
+    return result.rows.map(row => new Message(Message.mapRow(row)));
+  }
+
+  /**
+   * Helper function to map database row to constructor properties
+   */
+  static mapRow(row) {
+    return {
       id: row.id,
       userId: row.user_id,
       projectId: row.project_id,
@@ -195,6 +170,7 @@ class Message extends CachedModel {
       recipient: row.recipient,
       subject: row.subject,
       content: row.content,
+      metadata: row.metadata,
       status: row.status,
       responseReceived: row.response_received,
       followUpCount: row.follow_up_count,
@@ -202,8 +178,8 @@ class Message extends CachedModel {
       followUpDate: row.follow_up_date,
       unresponsiveFlagged: row.unresponsive_flagged,
       createdAt: row.created_at,
-      updatedAt: row.updated_at
-    }));
+      updatedAt: row.updated_at,
+    };
   }
 
   /**
@@ -220,6 +196,12 @@ class Message extends CachedModel {
       fields.push(`project_id = $${paramIndex++}`);
       values.push(messageData.projectId);
       this.projectId = messageData.projectId;
+    }
+
+    if (messageData.metadata !== undefined) {
+      fields.push(`metadata = $${paramIndex++}`);
+      values.push(messageData.metadata);
+      this.metadata = messageData.metadata;
     }
 
     if (messageData.recipient !== undefined) {
@@ -296,23 +278,7 @@ class Message extends CachedModel {
 
     const result = await pool.query(query, values);
     
-    const updatedMessage = new Message({
-      id: result.rows[0].id,
-      userId: result.rows[0].user_id,
-      projectId: result.rows[0].project_id,
-      platformId: result.rows[0].platform_id,
-      recipient: result.rows[0].recipient,
-      subject: result.rows[0].subject,
-      content: result.rows[0].content,
-      status: result.rows[0].status,
-      responseReceived: result.rows[0].response_received,
-      followUpCount: result.rows[0].follow_up_count,
-      followUpScheduled: result.rows[0].follow_up_scheduled,
-      followUpDate: result.rows[0].follow_up_date,
-      unresponsiveFlagged: result.rows[0].unresponsive_flagged,
-      createdAt: result.rows[0].created_at,
-      updatedAt: result.rows[0].updated_at
-    });
+    const updatedMessage = new Message(Message.mapRow(result.rows[0]));
 
     // Invalidate cache
     await cache.del(`messages:${this.id}`);

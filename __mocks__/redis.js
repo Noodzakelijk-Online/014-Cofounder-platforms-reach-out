@@ -6,6 +6,7 @@ const mRedisClient = {
   get: jest.fn(),
   set: jest.fn(),
   del: jest.fn(),
+  ping: jest.fn(),
   isOpen: true, // Assume client is always open for tests
 };
 

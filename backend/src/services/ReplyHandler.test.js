@@ -1,7 +1,9 @@
 const ReplyHandler = require('./ReplyHandler');
 const Message = require('../models/Message');
+const logger = require('../utils/logger');
 
 jest.mock('../models/Message');
+jest.mock('../utils/logger'); // Mock the logger to spy on its methods
 
 describe('ReplyHandler Service', () => {
   afterEach(() => {
@@ -21,6 +23,7 @@ describe('ReplyHandler Service', () => {
 
     expect(Message.findById).toHaveBeenCalledWith(123);
     expect(mockMessage.markResponded).toHaveBeenCalledTimes(1);
+    expect(logger.info).toHaveBeenCalledWith({ messageId: 123 }, 'Message marked as responded.');
   });
 
   it('should do nothing if the message is already marked as responded', async () => {
@@ -36,25 +39,24 @@ describe('ReplyHandler Service', () => {
 
     expect(Message.findById).toHaveBeenCalledWith(123);
     expect(mockMessage.markResponded).not.toHaveBeenCalled();
+    expect(logger.info).toHaveBeenCalledWith({ messageId: 123 }, 'Received a reply for an already-responded message. Ignoring.');
   });
 
   it('should handle cases where the message is not found', async () => {
     Message.findById.mockResolvedValue(null);
-    console.warn = jest.fn(); // Suppress console output for the test
 
     const replyPayload = { originalMessageId: 999 };
     await ReplyHandler.handleReply(replyPayload);
 
     expect(Message.findById).toHaveBeenCalledWith(999);
-    expect(console.warn).toHaveBeenCalledWith('Received a reply for a message that does not exist: 999');
+    expect(logger.warn).toHaveBeenCalledWith({ originalMessageId: 999 }, 'Received a reply for a message that does not exist.');
   });
 
   it('should handle cases where the payload has no message ID', async () => {
-    console.error = jest.fn(); // Suppress console output for the test
     const replyPayload = { someOtherData: 'foo' };
     await ReplyHandler.handleReply(replyPayload);
 
     expect(Message.findById).not.toHaveBeenCalled();
-    expect(console.error).toHaveBeenCalledWith('Received a reply payload without an originalMessageId.');
+    expect(logger.error).toHaveBeenCalledWith({ payload: replyPayload }, 'Received a reply payload without an originalMessageId.');
   });
 });

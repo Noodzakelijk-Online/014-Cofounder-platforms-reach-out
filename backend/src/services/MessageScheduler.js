@@ -3,6 +3,7 @@ const Message = require('../models/Message');
 const FollowUpTemplate = require('../models/FollowUpTemplate');
 const { spin } = require('../utils/spintax');
 const { pool } = require('../database/connection_pool');
+const logger = require('../utils/logger');
 
 const BATCH_SIZE = 100;
 
@@ -28,7 +29,7 @@ class MessageScheduler {
         try {
           await this.processProjectDrafts(project);
         } catch (error) {
-          console.error(`Error processing drafts for project ${project.id}:`, error);
+          logger.error({ err: error, projectId: project.id }, 'Error processing drafts for project');
         }
       }
       offset += BATCH_SIZE;
@@ -95,7 +96,7 @@ class MessageScheduler {
           });
         }
       } catch (error) {
-        console.error(`Error processing follow-up for message ${message.id}:`, error);
+        logger.error({ err: error, messageId: message.id }, 'Error processing follow-up');
       }
     }
   }
@@ -145,7 +146,7 @@ MessageScheduler.processProjectDrafts = async function(project) {
     try {
       await message.send();
     } catch (error) {
-      console.error(`Error sending message ${message.id}:`, error);
+      logger.error({ err: error, messageId: message.id }, 'Error sending message');
     }
   }
 };

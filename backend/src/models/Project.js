@@ -8,7 +8,7 @@
 
 const { pool } = require('../database/connection_pool');
 const CachedModel = require('./CachedModel');
-const cache = require('../utils/cache');
+const { cache } = require('../utils/cache');
 
 class Project extends CachedModel {
   constructor(data = {}) {
