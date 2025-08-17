@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="256px" height="256px" viewBox="0 0 256 256" version="1.1">
+  <title>Co-Founders Outreach Icon</title>
+  <defs>
+    <linearGradient x1="0%" y1="0%" x2="100%" y2="100%" id="gradient">
+      <stop stop-color="#6C5CE7" offset="0%"></stop>
+      <stop stop-color="#FF0099" offset="100%"></stop>
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="8"></feGaussianBlur>
+      <feOffset dx="0" dy="4"></feOffset>
+      <feComposite in2="SourceAlpha" operator="arithmetic" k2="-1" k3="1"></feComposite>
+      <feColorMatrix type="matrix" values="0 0 0 0 0.2 0 0 0 0 0.2 0 0 0 0 0.5 0 0 0 0.5 0"></feColorMatrix>
+    </filter>
+  </defs>
+  <g>
+    <circle fill="#1A1B2E" cx="128" cy="128" r="128"></circle>
+    <path d="M128,48 C83.81722,48 48,83.81722 48,128 C48,172.18278 83.81722,208 128,208 C172.18278,208 208,172.18278 208,128 C208,83.81722 172.18278,48 128,48 Z M128,188 C94.86339,188 68,161.13661 68,128 C68,94.86339 94.86339,68 128,68 C161.13661,68 188,94.86339 188,128 C188,161.13661 161.13661,188 128,188 Z" fill="url(#gradient)" filter="url(#shadow)"></path>
+    <path d="M128,88 C105.90861,88 88,105.90861 88,128 C88,150.09139 105.90861,168 128,168 C150.09139,168 168,150.09139 168,128 C168,105.90861 150.09139,88 128,88 Z" fill="url(#gradient)"></path>
+    <path d="M128,108 C116.95431,108 108,116.95431 108,128 C108,139.04569 116.95431,148 128,148 C139.04569,148 148,139.04569 148,128 C148,116.95431 139.04569,108 128,108 Z" fill="#FFFFFF"></path>
+  </g>
+</svg>

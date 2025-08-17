@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Co-Founders Outreach - User Guide</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      line-height: 1.6;
+      color: #333;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    h1 {
+      color: #6C5CE7;
+      border-bottom: 2px solid #6C5CE7;
+      padding-bottom: 10px;
+    }
+    h2 {
+      color: #6C5CE7;
+      margin-top: 30px;
+    }
+    h3 {
+      color: #6C5CE7;
+      margin-top: 25px;
+    }
+    .section {
+      background-color: #f8f9fa;
+      border-left: 4px solid #6C5CE7;
+      padding: 15px;
+      margin-bottom: 20px;
+      border-radius: 0 5px 5px 0;
+    }
+    code {
+      background-color: #f1f1f1;
+      padding: 2px 5px;
+      border-radius: 3px;
+      font-family: Consolas, Monaco, 'Andale Mono', monospace;
+    }
+    .note {
+      background-color: #fff3cd;
+      border-left: 4px solid #ffc107;
+      padding: 15px;
+      margin: 20px 0;
+      border-radius: 0 5px 5px 0;
+    }
+    .tip {
+      background-color: #d4edda;
+      border-left: 4px solid #28a745;
+      padding: 15px;
+      margin: 20px 0;
+      border-radius: 0 5px 5px 0;
+    }
+    img {
+      max-width: 100%;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      margin: 15px 0;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 20px 0;
+    }
+    th, td {
+      padding: 12px;
+      text-align: left;
+      border-bottom: 1px solid #ddd;
+    }
+    th {
+      background-color: #f8f9fa;
+    }
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 20px;
+      margin: 20px 0;
+    }
+    .feature-card {
+      background-color: #f8f9fa;
+      border-radius: 5px;
+      padding: 15px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    .feature-card h4 {
+      margin-top: 0;
+      color: #6C5CE7;
+    }
+  </style>
+</head>
+<body>
+  <h1>Co-Founders Outreach - User Guide</h1>
+  
+  <p>Welcome to the Co-Founders Automated Reach Out Tool! This comprehensive guide will help you navigate the dashboard and make the most of all features available in the application.</p>
+  
+  <div class="section">
+    <h2>Table of Contents</h2>
+    <ol>
+      <li><a href="#getting-started">Getting Started</a></li>
+      <li><a href="#dashboard">Dashboard Overview</a></li>
+      <li><a href="#messages">Managing Messages</a></li>
+      <li><a href="#compose">Composing Messages</a></li>
+      <li><a href="#analytics">Analytics & Reporting</a></li>
+      <li><a href="#settings">Settings & Configuration</a></li>
+      <li><a href="#account-types">Free vs. Paid Account Management</a></li>
+      <li><a href="#troubleshooting">Troubleshooting</a></li>
+    </ol>
+  </div>
+  
+  <div class="section" id="getting-started">
+    <h2>Getting Started</h2>
+    
+    <h3>First Launch</h3>
+    <p>After installing the application using our one-click installer, you'll be greeted with a splash screen followed by the main dashboard. The first time you launch the application, you'll need to connect your platform accounts.</p>
+    
+    <h3>Connecting Your Accounts</h3>
+    <ol>
+      <li>Click on the "Settings" option in the left sidebar</li>
+      <li>Select the "Platforms" tab</li>
+      <li>Click "Connect New Platform" to add your StartHawk or CoFoundersLab account</li>
+      <li>Enter your credentials and select your account type (Free or Paid)</li>
+      <li>Click "Connect" to establish the connection</li>
+    </ol>
+    
+    <div class="note">
+      <p><strong>Note:</strong> The application will automatically detect your account type, but you can manually override it if needed.</p>
+    </div>
+  </div>
+  
+  <div class="section" id="dashboard">
+    <h2>Dashboard Overview</h2>
+    
+    <p>The dashboard provides a comprehensive overview of your outreach activities and performance metrics.</p>
+    
+    <h3>Key Components</h3>
+    
+    <div class="feature-grid">
+      <div class="feature-card">
+        <h4>Quick Stats</h4>
+        <p>At the top of the dashboard, you'll find three key metrics:</p>
+        <ul>
+          <li><strong>Total Messages:</strong> Number of messages sent across all platforms</li>
+          <li><strong>Response Rate:</strong> Percentage of messages that received responses</li>
+          <li><strong>Time Saved:</strong> Estimated time saved by using automation</li>
+        </ul>
+      </div>
+      
+      <div class="feature-card">
+        <h4>Response Rate Chart</h4>
+        <p>A donut chart showing the proportion of messages that received responses versus those that didn't.</p>
+      </div>
+      
+      <div class="feature-card">
+        <h4>Message Performance</h4>
+        <p>A line chart tracking sent messages and responses over time, helping you identify trends in your outreach effectiveness.</p>
+      </div>
+      
+      <div class="feature-card">
+        <h4>Platform Comparison</h4>
+        <p>A bar chart comparing your performance across different platforms (StartHawk and CoFoundersLab).</p>
+      </div>
+      
+      <div class="feature-card">
+        <h4>Performance Metrics</h4>
+        <p>Progress bars showing your response rate and follow-up effectiveness compared to benchmarks.</p>
+      </div>
+      
+      <div class="feature-card">
+        <h4>Monthly Activity</h4>
+        <p>A line chart showing your overall activity levels throughout the year.</p>
+      </div>
+    </div>
+    
+    <div class="tip">
+      <p><strong>Tip:</strong> Hover over any chart element to see detailed information in a tooltip.</p>
+    </div>
+  </div>
+  
+  <div class="section" id="messages">
+    <h2>Managing Messages</h2>
+    
+    <p>The Messages section allows you to view, track, and manage all your outreach communications.</p>
+    
+    <h3>Message List</h3>
+    <p>The message list displays all your sent and received messages, with the following information:</p>
+    <ul>
+      <li>Recipient name and platform</li>
+      <li>Message subject and preview</li>
+      <li>Sent date and time</li>
+      <li>Status (sent, delivered, read, responded)</li>
+      <li>Follow-up status</li>
+    </ul>
+    
+    <h3>Message Actions</h3>
+    <p>For each message, you can:</p>
+    <ul>
+      <li>View the full conversation thread</li>
+      <li>Send a manual follow-up</li>
+      <li>Schedule a follow-up</li>
+      <li>Mark as important</li>
+      <li>Archive or delete</li>
+    </ul>
+    
+    <h3>Filtering and Sorting</h3>
+    <p>Use the filters at the top of the message list to:</p>
+    <ul>
+      <li>Filter by platform (StartHawk, CoFoundersLab)</li>
+      <li>Filter by status (sent, responded, unresponsive)</li>
+      <li>Filter by date range</li>
+      <li>Sort by date, platform, or response status</li>
+    </ul>
+  </div>
+  
+  <div class="section" id="compose">
+    <h2>Composing Messages</h2>
+    
+    <p>The Compose section allows you to create new messages and set up automated follow-ups.</p>
+    
+    <h3>Creating a New Message</h3>
+    <ol>
+      <li>Click on "Compose" in the left sidebar</li>
+      <li>Select the target platform (StartHawk or CoFoundersLab)</li>
+      <li>Choose recipients (individual or batch selection)</li>
+      <li>Select a template or write a custom message</li>
+      <li>Use personalization tokens to customize your message (e.g., {first_name}, {company})</li>
+      <li>Preview your message to see how it will appear to recipients</li>
+      <li>Schedule sending time or send immediately</li>
+    </ol>
+    
+    <h3>Message Templates</h3>
+    <p>Create and save templates for common outreach scenarios:</p>
+    <ul>
+      <li>Initial contact</li>
+      <li>Follow-up messages</li>
+      <li>Thank you messages</li>
+      <li>Meeting requests</li>
+    </ul>
+    
+    <h3>Follow-up Scheduling</h3>
+    <p>Set up automated follow-ups based on recipient response:</p>
+    <ul>
+      <li>Define the number of follow-ups (1-3 recommended)</li>
+      <li>Set the time interval between follow-ups (3-7 days recommended)</li>
+      <li>Create different messages for each follow-up stage</li>
+      <li>Enable automatic cancellation of follow-ups if a response is received</li>
+    </ul>
+    
+    <div class="note">
+      <p><strong>Note for Free Accounts:</strong> The system will automatically manage your daily message limits to ensure compliance with platform restrictions.</p>
+    </div>
+  </div>
+  
+  <div class="section" id="analytics">
+    <h2>Analytics & Reporting</h2>
+    
+    <p>The Analytics section provides detailed insights into your outreach performance.</p>
+    
+    <h3>Key Metrics</h3>
+    <ul>
+      <li><strong>Response Rate:</strong> Percentage of messages that received responses</li>
+      <li><strong>Response Time:</strong> Average time to receive a response</li>
+      <li><strong>Follow-up Effectiveness:</strong> Response rate after follow-ups</li>
+      <li><strong>Platform Comparison:</strong> Performance across different platforms</li>
+      <li><strong>Time Saved:</strong> Estimated time saved through automation</li>
+      <li><strong>Cost Efficiency:</strong> Estimated cost savings based on your hourly rate</li>
+    </ul>
+    
+    <h3>Custom Reports</h3>
+    <p>Generate custom reports based on:</p>
+    <ul>
+      <li>Date ranges</li>
+      <li>Platforms</li>
+      <li>Message types</li>
+      <li>Response status</li>
+    </ul>
+    
+    <h3>Data Export</h3>
+    <p>Export your analytics data in various formats:</p>
+    <ul>
+      <li>CSV for spreadsheet analysis</li>
+      <li>PDF for presentations</li>
+      <li>PNG for chart images</li>
+    </ul>
+  </div>
+  
+  <div class="section" id="settings">
+    <h2>Settings & Configuration</h2>
+    
+    <p>The Settings section allows you to customize the application to your needs.</p>
+    
+    <h3>Account Settings</h3>
+    <ul>
+      <li><strong>Profile Information:</strong> Update your name, email, and role</li>
+      <li><strong>Time & Money Settings:</strong> Set your hourly rate for cost-saving calculations</li>
+      <li><strong>Security:</strong> Change password and enable two-factor authentication</li>
+    </ul>
+    
+    <h3>Platform Settings</h3>
+    <ul>
+      <li><strong>Connected Platforms:</strong> Manage your StartHawk and CoFoundersLab connections</li>
+      <li><strong>Account Type Settings:</strong> Configure free or paid account handling for each platform</li>
+      <li><strong>Sync Settings:</strong> Control how often the application syncs with platforms</li>
+    </ul>
+    
+    <h3>Messaging Settings</h3>
+    <ul>
+      <li><strong>Default Templates:</strong> Set up and manage message templates</li>
+      <li><strong>Follow-up Settings:</strong> Configure default follow-up behavior</li>
+      <li><strong>Personalization:</strong> Manage personalization tokens and defaults</li>
+    </ul>
+    
+    <h3>Notification Settings</h3>
+    <ul>
+      <li><strong>Desktop Notifications:</strong> Configure when to receive desktop alerts</li>
+      <li><strong>Email Notifications:</strong> Set up email alerts for important events</li>
+      <li><strong>Notification Schedule:</strong> Define when notifications are active</li>
+    </ul>
+    
+    <h3>Appearance Settings</h3>
+    <ul>
+      <li><strong>Theme:</strong> Choose between dark and light themes</li>
+      <li><strong>Layout:</strong> Adjust the dashboard layout to your preference</li>
+      <li><strong>Compact Mode:</strong> Enable for smaller screens or to fit more information</li>
+    </ul>
+  </div>
+  
+  <div class="section" id="account-types">
+    <h2>Free vs. Paid Account Management</h2>
+    
+    <p>The Co-Founders Outreach tool intelligently handles both free and paid accounts on StartHawk and CoFoundersLab.</p>
+    
+    <h3>Free Account Features</h3>
+    <ul>
+      <li><strong>Smart Message Queuing:</strong> Automatically respects daily message limits</li>
+      <li><strong>Optimal Timing:</strong> Sends messages at the best times to maximize impact</li>
+      <li><strong>Limit Tracking:</strong> Monitors your usage against platform limits</li>
+      <li><strong>Priority Management:</strong> Ensures your most important messages are sent first</li>
+    </ul>
+    
+    <h3>Paid Account Features</h3>
+    <ul>
+      <li><strong>Unlimited Messaging:</strong> No daily limits on message sending</li>
+      <li><strong>Batch Processing:</strong> Send to multiple recipients simultaneously</li>
+      <li><strong>Advanced Analytics:</strong> Access to more detailed performance metrics</li>
+      <li><strong>Priority Support:</strong> Faster handling of your messages on the platforms</li>
+    </ul>
+    
+    <h3>Switching Between Account Types</h3>
+    <p>If you upgrade or downgrade your platform accounts:</p>
+    <ol>
+      <li>Go to Settings > Platforms</li>
+      <li>Select the platform you want to update</li>
+      <li>Change the account type setting</li>
+      <li>Save your changes</li>
+    </ol>
+    
+    <div class="note">
+      <p><strong>Note:</strong> The application will automatically adjust its behavior based on your account type, ensuring optimal performance while respecting platform limitations.</p>
+    </div>
+  </div>
+  
+  <div class="section" id="troubleshooting">
+    <h2>Troubleshooting</h2>
+    
+    <h3>Common Issues</h3>
+    
+    <table>
+      <tr>
+        <th>Issue</th>
+        <th>Possible Cause</th>
+        <th>Solution</th>
+      </tr>
+      <tr>
+        <td>Application doesn't start</td>
+        <td>Missing dependencies or corrupted installation</td>
+        <td>Reinstall the application or run as administrator</td>
+      </tr>
+      <tr>
+        <td>Can't connect to platforms</td>
+        <td>Invalid credentials or network issues</td>
+        <td>Verify your login details and check your internet connection</td>
+      </tr>
+      <tr>
+        <td>Messages not sending</td>
+        <td>Platform limits reached or connection issues</td>
+        <td>Check your daily limits or reconnect your platform account</td>
+      </tr>
+      <tr>
+        <td>Analytics not updating</td>
+        <td>Sync issues or data processing delay</td>
+        <td>Manually trigger a sync in Settings > Platforms</td>
+      </tr>
+      <tr>
+        <td>Application running slowly</td>
+        <td>Too many messages or limited system resources</td>
+        <td>Archive old messages or restart the application</td>
+      </tr>
+    </table>
+    
+    <h3>Diagnostic Tools</h3>
+    <p>The application includes built-in diagnostic tools:</p>
+    <ol>
+      <li>Go to Settings > Advanced</li>
+      <li>Click "Run Diagnostics" to check for common issues</li>
+      <li>View the diagnostic report for recommended actions</li>
+    </ol>
+    
+    <h3>Getting Support</h3>
+    <p>If you encounter issues not covered in this guide:</p>
+    <ul>
+      <li>Check the Help Center by clicking the "?" icon in the top right corner</li>
+      <li>Contact support at support@cofounders-outreach.com</li>
+      <li>Visit our website at https://cofounders-outreach.com/support</li>
+    </ul>
+  </div>
+  
+  <div class="section">
+    <h2>Keyboard Shortcuts</h2>
+    
+    <table>
+      <tr>
+        <th>Action</th>
+        <th>Windows Shortcut</th>
+      </tr>
+      <tr>
+        <td>Open Dashboard</td>
+        <td>Ctrl + 1</td>
+      </tr>
+      <tr>
+        <td>Open Messages</td>
+        <td>Ctrl + 2</td>
+      </tr>
+      <tr>
+        <td>Compose New Message</td>
+        <td>Ctrl + N</td>
+      </tr>
+      <tr>
+        <td>Open Analytics</td>
+        <td>Ctrl + 3</td>
+      </tr>
+      <tr>
+        <td>Open Settings</td>
+        <td>Ctrl + ,</td>
+      </tr>
+      <tr>
+        <td>Refresh Data</td>
+        <td>F5</td>
+      </tr>
+      <tr>
+        <td>Search</td>
+        <td>Ctrl + F</td>
+      </tr>
+      <tr>
+        <td>Help</td>
+        <td>F1</td>
+      </tr>
+    </table>
+  </div>
+  
+  <div class="note">
+    <p><strong>Privacy Note:</strong> The Co-Founders Outreach tool stores all your data locally on your computer. No data is sent to our servers except when interacting with the StartHawk and CoFoundersLab platforms.</p>
+  </div>
+</body>
+</html>
