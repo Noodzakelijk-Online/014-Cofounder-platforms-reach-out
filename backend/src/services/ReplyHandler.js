@@ -38,6 +38,13 @@ class ReplyHandler {
       await message.markResponded();
       logger.info({ messageId: originalMessageId }, 'Message marked as responded.');
 
+      // Increment the project's responses received count
+      const Project = require('../models/Project');
+      const project = await Project.findById(message.projectId);
+      if (project) {
+        await project.incrementStats({ responsesReceived: 1 });
+      }
+
     } catch (error) {
       logger.error({ err: error, originalMessageId }, 'Error processing reply.');
     }

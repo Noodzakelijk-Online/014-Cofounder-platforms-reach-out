@@ -232,17 +232,10 @@ class User extends CachedModel {
       throw new Error('Invalid email or password');
     }
 
-    // Create JWT token
-    const token = jwt.sign(
-      { id: user.id, email: user.email },
-      process.env.JWT_SECRET || 'your-secret-key',
-      { expiresIn: '24h' }
-    );
-
-    // Remove password from user object
+    // Remove password from user object before returning
     user.password = undefined;
 
-    return { user, token };
+    return user;
   }
 
   /**

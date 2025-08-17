@@ -19,9 +19,12 @@
   },
   "homepage": "https://github.com/Noodzakelijk-Online/014-Cofounder-platforms-reach-out#readme",
   "devDependencies": {
-    "jest": "^30.0.5"
+    "jest": "^30.0.5",
+    "supertest": "^7.1.4"
   },
   "dependencies": {
+    "express": "^5.1.0",
+    "jsonwebtoken": "^9.0.2",
     "pg": "^8.16.3",
     "pino": "^9.9.0",
     "redis": "^5.8.1"

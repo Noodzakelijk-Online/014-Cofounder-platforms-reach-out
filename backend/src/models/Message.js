@@ -322,6 +322,13 @@ class Message extends CachedModel {
     // Log the outreach
     await OutreachLog.create(this.userId, this.recipient);
 
+    // Increment the project's sent count
+    const Project = require('./Project');
+    const project = await Project.findById(this.projectId);
+    if (project) {
+      await project.incrementStats({ messagesSent: 1 });
+    }
+
     // After sending, schedule the first follow-up from the sequence
     const FollowUpTemplate = require('./FollowUpTemplate');
     const templates = await FollowUpTemplate.findByProjectId(this.projectId);

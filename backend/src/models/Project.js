@@ -18,6 +18,8 @@ class Project extends CachedModel {
     this.name = data.name || '';
     this.messageInterval = data.messageInterval || 1; // Default to 1 message per interval
     this.intervalUnit = data.intervalUnit || 'day'; // 'day', 'week', 'month'
+    this.messagesSentCount = data.messagesSentCount || 0;
+    this.responsesReceivedCount = data.responsesReceivedCount || 0;
     this.createdAt = data.createdAt || new Date();
     this.updatedAt = data.updatedAt || new Date();
   }
@@ -29,16 +31,16 @@ class Project extends CachedModel {
    */
   static async create(projectData) {
     const query = `
-      INSERT INTO projects (user_id, name, message_interval, interval_unit, created_at, updated_at)
-      VALUES ($1, $2, $3, $4, NOW(), NOW())
-      RETURNING id, user_id, name, message_interval, interval_unit, created_at, updated_at
+      INSERT INTO projects (user_id, name, message_interval, interval_unit)
+      VALUES ($1, $2, $3, $4)
+      RETURNING *;
     `;
 
     const values = [
       projectData.userId,
       projectData.name,
       projectData.messageInterval,
-      projectData.intervalUnit
+      projectData.intervalUnit,
     ];
 
     try {
@@ -71,14 +73,12 @@ class Project extends CachedModel {
     // Try to get from cache first
     const cachedProject = await cache.get(`projects:${id}`);
     if (cachedProject) {
+      // The cache might not have the latest stats, but it's a trade-off.
+      // For real-time stats, we could skip the cache here.
       return new Project(JSON.parse(cachedProject));
     }
 
-    const query = `
-      SELECT id, user_id, name, message_interval, interval_unit, created_at, updated_at
-      FROM projects
-      WHERE id = $1
-    `;
+    const query = `SELECT * FROM projects WHERE id = $1`;
 
     const result = await pool.query(query, [id]);
 
@@ -86,15 +86,7 @@ class Project extends CachedModel {
       return null;
     }
 
-    const project = new Project({
-      id: result.rows[0].id,
-      userId: result.rows[0].user_id,
-      name: result.rows[0].name,
-      messageInterval: result.rows[0].message_interval,
-      intervalUnit: result.rows[0].interval_unit,
-      createdAt: result.rows[0].created_at,
-      updatedAt: result.rows[0].updated_at
-    });
+    const project = new Project(this.mapRow(result.rows[0]));
 
     // Cache the project
     await cache.set(`projects:${id}`, JSON.stringify(project), 3600); // Cache for 1 hour
@@ -114,28 +106,70 @@ class Project extends CachedModel {
       return JSON.parse(cachedProjects).map(p => new Project(p));
     }
 
-    const query = `
-      SELECT id, user_id, name, message_interval, interval_unit, created_at, updated_at
-      FROM projects
-      WHERE user_id = $1
-    `;
-
+    const query = `SELECT * FROM projects WHERE user_id = $1`;
     const result = await pool.query(query, [userId]);
-
-    const projects = result.rows.map(row => new Project({
-      id: row.id,
-      userId: row.user_id,
-      name: row.name,
-      messageInterval: row.message_interval,
-      intervalUnit: row.interval_unit,
-      createdAt: row.created_at,
-      updatedAt: row.updated_at
-    }));
+    const projects = result.rows.map(row => new Project(this.mapRow(row)));
 
     // Cache the projects
     await cache.set(`projects:user:${userId}`, JSON.stringify(projects), 3600); // Cache for 1 hour
 
     return projects;
+  }
+
+  /**
+   * Atomically increments stats for a project.
+   * @param {Object} fieldsToIncrement - e.g. { messagesSent: 1 }
+   */
+  async incrementStats(fieldsToIncrement) {
+    let query = 'UPDATE projects SET ';
+    const updates = [];
+    const values = [];
+    let paramIndex = 1;
+
+    if (fieldsToIncrement.messagesSent) {
+      updates.push(`messages_sent_count = messages_sent_count + $${paramIndex++}`);
+      values.push(fieldsToIncrement.messagesSent);
+    }
+    if (fieldsToIncrement.responsesReceived) {
+      updates.push(`responses_received_count = responses_received_count + $${paramIndex++}`);
+      values.push(fieldsToIncrement.responsesReceived);
+    }
+
+    if (updates.length === 0) return this;
+
+    query += updates.join(', ');
+    query += ` WHERE id = $${paramIndex} RETURNING *;`;
+    values.push(this.id);
+
+    const result = await pool.query(query, values);
+    const updatedProject = new Project(Project.mapRow(result.rows[0]));
+
+    // Update the current instance with new values
+    this.messagesSentCount = updatedProject.messagesSentCount;
+    this.responsesReceivedCount = updatedProject.responsesReceivedCount;
+
+    // Invalidate cache
+    await cache.del(`projects:${this.id}`);
+    await cache.del(`projects:user:${this.userId}`);
+
+    return updatedProject;
+  }
+
+  /**
+   * Helper function to map database row to constructor properties
+   */
+  static mapRow(row) {
+    return {
+      id: row.id,
+      userId: row.user_id,
+      name: row.name,
+      messageInterval: row.message_interval,
+      intervalUnit: row.interval_unit,
+      messagesSentCount: row.messages_sent_count,
+      responsesReceivedCount: row.responses_received_count,
+      createdAt: row.created_at,
+      updatedAt: row.updated_at,
+    };
   }
 
   /**
