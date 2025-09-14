@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JavaScript Test</title>
+    <style>
+        body {
+            background: #1a1b2e;
+            color: white;
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+        .test-result {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+        }
+        .success { background: #00d68f; }
+        .error { background: #ff6b6b; }
+    </style>
+</head>
+<body>
+    <h1>JavaScript Execution Test</h1>
+    <div id="results"></div>
+    
+    <script>
+        console.log('=== JavaScript Test Starting ===');
+        
+        function addResult(message, isSuccess = true) {
+            const results = document.getElementById('results');
+            const div = document.createElement('div');
+            div.className = `test-result ${isSuccess ? 'success' : 'error'}`;
+            div.textContent = message;
+            results.appendChild(div);
+            console.log(message);
+        }
+        
+        // Test 1: Basic JavaScript execution
+        addResult('✓ JavaScript is executing');
+        
+        // Test 2: DOM manipulation
+        try {
+            document.title = 'JS Test - Working';
+            addResult('✓ DOM manipulation works');
+        } catch (e) {
+            addResult('✗ DOM manipulation failed: ' + e.message, false);
+        }
+        
+        // Test 3: Fetch API
+        fetch('/api/health')
+            .then(response => response.json())
+            .then(data => {
+                addResult('✓ Fetch API works - Server status: ' + data.status);
+            })
+            .catch(error => {
+                addResult('✗ Fetch API failed: ' + error.message, false);
+            });
+        
+        // Test 4: Event listeners
+        document.addEventListener('DOMContentLoaded', function() {
+            addResult('✓ DOMContentLoaded event fired');
+        });
+        
+        // Test 5: Console output
+        console.log('Console output test');
+        console.error('Console error test');
+        console.warn('Console warning test');
+        
+        addResult('Test completed - Check browser console for output');
+    </script>
+</body>
+</html>
+

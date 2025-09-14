@@ -5,20 +5,355 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Co-Founders Outreach - Dashboard</title>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap">
-  <link rel="stylesheet" href="styles.css">
   <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #1a1b2e;
+      color: #ffffff;
+      overflow-x: hidden;
+    }
+
+    .sidebar {
+      position: fixed;
+      left: 0;
+      top: 0;
+      width: 250px;
+      height: 100vh;
+      background: #16213e;
+      padding: 20px;
+      z-index: 1000;
+    }
+
+    .logo-container {
+      display: flex;
+      align-items: center;
+      margin-bottom: 40px;
+    }
+
+    .logo {
+      width: 40px;
+      height: 40px;
+      margin-right: 12px;
+    }
+
+    .logo-text {
+      font-size: 18px;
+      font-weight: 600;
+      color: #ffffff;
+    }
+
+    .nav-menu {
+      margin-bottom: 40px;
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      padding: 12px 16px;
+      margin-bottom: 8px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .nav-item:hover {
+      background: rgba(108, 92, 231, 0.1);
+    }
+
+    .nav-item.active {
+      background: linear-gradient(135deg, #6C5CE7, #FF0099);
+    }
+
+    .nav-icon {
+      width: 20px;
+      height: 20px;
+      margin-right: 12px;
+    }
+
+    .nav-text {
+      font-size: 14px;
+      font-weight: 500;
+    }
+
+    .user-profile {
+      position: absolute;
+      bottom: 20px;
+      left: 20px;
+      right: 20px;
+      display: flex;
+      align-items: center;
+    }
+
+    .user-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #6C5CE7, #FF0099);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      margin-right: 12px;
+    }
+
+    .user-info {
+      flex: 1;
+    }
+
+    .user-name {
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .user-role {
+      font-size: 12px;
+      color: #8892b0;
+    }
+
+    .main-content {
+      margin-left: 250px;
+      padding: 20px;
+      min-height: 100vh;
+    }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 30px;
+    }
+
+    .page-title {
+      font-size: 28px;
+      font-weight: 700;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .search-container {
+      position: relative;
+    }
+
+    .search-input {
+      background: #16213e;
+      border: 1px solid #2a4a7f;
+      border-radius: 8px;
+      padding: 10px 16px;
+      color: #ffffff;
+      font-size: 14px;
+      width: 300px;
+    }
+
+    .search-input::placeholder {
+      color: #8892b0;
+    }
+
+    .notification-icon {
+      position: relative;
+      width: 24px;
+      height: 24px;
+      cursor: pointer;
+    }
+
+    .notification-badge {
+      position: absolute;
+      top: -8px;
+      right: -8px;
+      background: #ff6b6b;
+      color: white;
+      border-radius: 50%;
+      width: 18px;
+      height: 18px;
+      font-size: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+      margin-bottom: 30px;
+    }
+
+    .stat-card {
+      background: #16213e;
+      border-radius: 12px;
+      padding: 24px;
+      border: 1px solid #2a4a7f;
+    }
+
+    .stat-card .stat-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, #6C5CE7, #FF0099);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 16px;
+    }
+
+    .stat-card .stat-icon svg {
+      width: 24px;
+      height: 24px;
+      color: white;
+    }
+
+    .stat-value {
+      font-size: 32px;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .stat-label {
+      font-size: 14px;
+      color: #8892b0;
+    }
+
+    .charts-section {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 20px;
+      margin-bottom: 30px;
+    }
+
+    .chart-container {
+      background: #16213e;
+      border-radius: 12px;
+      padding: 24px;
+      border: 1px solid #2a4a7f;
+    }
+
+    .chart-container h3 {
+      margin-bottom: 20px;
+      font-size: 18px;
+      font-weight: 600;
+    }
+
+    .activity-section {
+      background: #16213e;
+      border-radius: 12px;
+      padding: 24px;
+      border: 1px solid #2a4a7f;
+    }
+
+    .activity-section h3 {
+      margin-bottom: 20px;
+      font-size: 18px;
+      font-weight: 600;
+    }
+
+    .activity-item {
+      display: flex;
+      align-items: center;
+      padding: 16px 0;
+      border-bottom: 1px solid #2a4a7f;
+    }
+
+    .activity-item:last-child {
+      border-bottom: none;
+    }
+
+    .activity-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 8px;
+      background: #2a4a7f;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 16px;
+      font-size: 18px;
+    }
+
+    .activity-content {
+      flex: 1;
+    }
+
+    .activity-title {
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .activity-details {
+      font-size: 12px;
+      color: #8892b0;
+      margin-bottom: 2px;
+    }
+
+    .activity-time {
+      font-size: 11px;
+      color: #8892b0;
+    }
+
+    .activity-status {
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: 500;
+    }
+
+    .activity-status.sent {
+      background: rgba(108, 92, 231, 0.2);
+      color: #6C5CE7;
+    }
+
+    .activity-status.received {
+      background: rgba(0, 214, 143, 0.2);
+      color: #00D68F;
+    }
+
+    .notification {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      padding: 12px 20px;
+      border-radius: 8px;
+      color: white;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      z-index: 1000;
+      transition: all 0.3s ease;
+    }
+
+    .notification.info {
+      background: #3a86ff;
+    }
+
+    .notification.success {
+      background: #00d68f;
+    }
+
+    .notification.error {
+      background: #ff6b6b;
+    }
+
+    .chart-placeholder {
+      height: 200px;
+      background: #2a4a7f;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #8892b0;
+      font-size: 14px;
+    }
+  </style>
 </head>
 <body>
-  <!-- Custom title bar for frameless window -->
-  <div class="title-bar">
-    <div></div>
-    <div class="title-bar-controls">
-      <div class="title-bar-button minimize" id="minimize-btn"></div>
-      <div class="title-bar-button maximize" id="maximize-btn"></div>
-      <div class="title-bar-button close" id="close-btn"></div>
-    </div>
-  </div>
-
   <!-- Sidebar -->
   <div class="sidebar">
     <div class="logo-container">
@@ -38,42 +373,35 @@
     </div>
     
     <div class="nav-menu">
-      <div class="nav-item active">
+      <div class="nav-item active" data-section="dashboard">
         <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
         </svg>
         <span class="nav-text">Dashboard</span>
       </div>
       
-      <div class="nav-item">
+      <div class="nav-item" data-section="messages">
         <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
         </svg>
         <span class="nav-text">Messages</span>
       </div>
       
-      <div class="nav-item">
+      <div class="nav-item" data-section="compose">
         <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
         </svg>
         <span class="nav-text">Compose</span>
       </div>
       
-      <div class="nav-item">
+      <div class="nav-item" data-section="analytics">
         <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
         </svg>
         <span class="nav-text">Analytics</span>
       </div>
       
-      <div class="nav-item">
-        <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-        </svg>
-        <span class="nav-text">Billing</span>
-      </div>
-      
-      <div class="nav-item">
+      <div class="nav-item" data-section="settings">
         <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
@@ -91,433 +419,199 @@
     </div>
   </div>
 
-  <!-- Main content -->
+  <!-- Main Content -->
   <div class="main-content">
     <div class="header">
       <h1 class="page-title">Dashboard</h1>
-      
       <div class="header-actions">
-        <div class="search-bar">
-          <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-          </svg>
+        <div class="search-container">
           <input type="text" class="search-input" placeholder="Search...">
         </div>
-        
         <div class="notification-icon">
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-5 5v-5z" />
           </svg>
-          <div class="notification-badge">3</div>
+          <span class="notification-badge">1</span>
         </div>
       </div>
     </div>
-    
-    <!-- Quick stats -->
-    <div class="quick-stats">
-      <div class="stat-card">
-        <div class="stat-icon">
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
-          </svg>
-        </div>
-        <div class="stat-info">
-          <div class="stat-title">Total Messages</div>
-          <div class="stat-value" id="total-messages">304</div>
-        </div>
-        <div class="stat-badge">+12%</div>
-      </div>
-      
-      <div class="stat-card">
-        <div class="stat-icon">
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-          </svg>
-        </div>
-        <div class="stat-info">
-          <div class="stat-title">Response Rate</div>
-          <div class="stat-value" id="response-rate">51%</div>
-        </div>
-        <div class="stat-badge">+5%</div>
-      </div>
-      
-      <div class="stat-card">
-        <div class="stat-icon">
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-          </svg>
-        </div>
-        <div class="stat-info">
-          <div class="stat-title">Time Saved</div>
-          <div class="stat-value" id="time-saved">42.5 hrs</div>
-        </div>
-        <div class="stat-badge" id="money-saved">$2,125</div>
-      </div>
-    </div>
-    
-    <!-- Dashboard grid -->
-    <div class="dashboard-grid">
-      <!-- Donut chart -->
-      <div class="chart-container donut-chart">
-        <div class="chart-header">
-          <div class="chart-title">Response Rate</div>
-        </div>
-        <div class="chart-content">
-          <canvas id="responseRateChart"></canvas>
-        </div>
-      </div>
-      
-      <!-- Line chart -->
-      <div class="chart-container line-chart">
-        <div class="chart-header">
-          <div class="chart-title">Message Performance</div>
-          <div class="chart-legend">
-            <div class="legend-item">
-              <div class="legend-color" style="background-color: var(--accent-blue);"></div>
-              <span>Sent</span>
-            </div>
-            <div class="legend-item">
-              <div class="legend-color" style="background-color: var(--accent-green);"></div>
-              <span>Responses</span>
-            </div>
+
+    <!-- Dashboard Content - ALWAYS VISIBLE -->
+    <div id="dashboard-content">
+      <!-- Stats Cards -->
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
+            </svg>
+          </div>
+          <div class="stat-content">
+            <div class="stat-value">5</div>
+            <div class="stat-label">Messages Sent</div>
           </div>
         </div>
-        <div class="chart-content">
-          <canvas id="messagePerformanceChart"></canvas>
-        </div>
-      </div>
-      
-      <!-- Bar chart -->
-      <div class="chart-container bar-chart">
-        <div class="chart-header">
-          <div class="chart-title">Platform Comparison</div>
-        </div>
-        <div class="chart-content">
-          <canvas id="platformComparisonChart"></canvas>
-        </div>
-      </div>
-      
-      <!-- Progress section -->
-      <div class="chart-container progress-section">
-        <div class="chart-header">
-          <div class="chart-title">Performance Metrics</div>
-        </div>
-        <div class="chart-content">
-          <div class="progress-item">
-            <div class="progress-header">
-              <div class="progress-title">Response Rate</div>
-              <div class="progress-value" id="response-rate-progress">55%</div>
-            </div>
-            <div class="progress-bar">
-              <div class="progress-fill purple" id="response-rate-bar" style="width: 55%"></div>
-            </div>
+
+        <div class="stat-card">
+          <div class="stat-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+            </svg>
           </div>
-          
-          <div class="progress-item">
-            <div class="progress-header">
-              <div class="progress-title">Follow-up Effectiveness</div>
-              <div class="progress-value" id="followup-rate-progress">76%</div>
-            </div>
-            <div class="progress-bar">
-              <div class="progress-fill pink" id="followup-rate-bar" style="width: 76%"></div>
-            </div>
+          <div class="stat-content">
+            <div class="stat-value">2</div>
+            <div class="stat-label">Responses</div>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+            </svg>
+          </div>
+          <div class="stat-content">
+            <div class="stat-value">40%</div>
+            <div class="stat-label">Response Rate</div>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+          </div>
+          <div class="stat-content">
+            <div class="stat-value">1.3h</div>
+            <div class="stat-label">Time Saved</div>
           </div>
         </div>
       </div>
-      
-      <!-- Activity chart -->
-      <div class="chart-container activity-chart">
-        <div class="chart-header">
-          <div class="chart-title">Monthly Activity</div>
+
+      <!-- Charts Section -->
+      <div class="charts-section">
+        <div class="chart-container">
+          <h3>Monthly Performance</h3>
+          <div class="chart-placeholder">
+            📊 Performance Chart<br>
+            <small>Messages: 5 sent, 2 responses this month</small>
+          </div>
         </div>
-        <div class="chart-content">
-          <canvas id="monthlyActivityChart"></canvas>
+        <div class="chart-container">
+          <h3>Platform Performance</h3>
+          <div class="chart-placeholder">
+            🥧 Platform Distribution<br>
+            <small>StartHawk: 3, CoFoundersLab: 1, AngelList: 1</small>
+          </div>
+        </div>
+      </div>
+
+      <!-- Recent Activity -->
+      <div class="activity-section">
+        <h3>Recent Activity</h3>
+        <div class="activity-list">
+          <div class="activity-item">
+            <div class="activity-icon">📤</div>
+            <div class="activity-content">
+              <div class="activity-title">Message sent</div>
+              <div class="activity-details">StartHawk • John Smith</div>
+              <div class="activity-time">2 hours ago</div>
+            </div>
+            <div class="activity-status sent">sent</div>
+          </div>
+          <div class="activity-item">
+            <div class="activity-icon">📥</div>
+            <div class="activity-content">
+              <div class="activity-title">Response received</div>
+              <div class="activity-details">CoFoundersLab • Sarah Johnson</div>
+              <div class="activity-time">1 day ago</div>
+            </div>
+            <div class="activity-status received">received</div>
+          </div>
+          <div class="activity-item">
+            <div class="activity-icon">📤</div>
+            <div class="activity-content">
+              <div class="activity-title">Message sent</div>
+              <div class="activity-details">StartHawk • Michael Brown</div>
+              <div class="activity-time">2 days ago</div>
+            </div>
+            <div class="activity-status sent">sent</div>
+          </div>
+          <div class="activity-item">
+            <div class="activity-icon">📥</div>
+            <div class="activity-content">
+              <div class="activity-title">Response received</div>
+              <div class="activity-details">AngelList • Emily Davis</div>
+              <div class="activity-time">3 days ago</div>
+            </div>
+            <div class="activity-status received">received</div>
+          </div>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- Load scripts -->
-  <script src="backend-integration.js"></script>
-  <script src="dashboard.js"></script>
   <script>
-    // Initialize charts with Chart.js
-    document.addEventListener('DOMContentLoaded', async () => {
-      try {
-        // Initialize backend connection
-        await backendIntegration.initialize();
-        
-        // Get analytics data
-        const analyticsData = await backendIntegration.getAnalyticsData();
-        
-        // Update dashboard with data
-        updateDashboardWithData(analyticsData);
-        
-        console.log('Dashboard initialized with live data');
-      } catch (error) {
-        console.error('Error initializing dashboard:', error);
-        showNotification('Error loading dashboard data. Using offline mode.', 'error');
-        
-        // Use mock data as fallback
-        const mockData = backendIntegration.getMockAnalyticsData();
-        updateDashboardWithData(mockData);
+    // Simple navigation functionality
+    document.addEventListener('DOMContentLoaded', function() {
+      console.log('Dashboard loaded successfully!');
+      
+      // Navigation
+      const navItems = document.querySelectorAll('.nav-item');
+      navItems.forEach(item => {
+        item.addEventListener('click', () => {
+          navItems.forEach(nav => nav.classList.remove('active'));
+          item.classList.add('active');
+          
+          const section = item.dataset.section;
+          document.querySelector('.page-title').textContent = 
+            section.charAt(0).toUpperCase() + section.slice(1);
+          
+          if (section !== 'dashboard') {
+            showNotification(`${section.charAt(0).toUpperCase() + section.slice(1)} section would load here`, 'info');
+          }
+        });
+      });
+      
+      // Search functionality
+      const searchInput = document.querySelector('.search-input');
+      if (searchInput) {
+        searchInput.addEventListener('keypress', (e) => {
+          if (e.key === 'Enter') {
+            showNotification(`Searching for: ${searchInput.value}`, 'info');
+            searchInput.value = '';
+          }
+        });
       }
+      
+      // Show success notification
+      setTimeout(() => {
+        showNotification('Dashboard loaded successfully!', 'success');
+      }, 500);
     });
-    
-    // Update dashboard with data
-    function updateDashboardWithData(data) {
-      // Update stats cards
-      document.getElementById('total-messages').textContent = data.messageStats.sent;
-      document.getElementById('response-rate').textContent = `${data.messageStats.responseRate}%`;
-      document.getElementById('time-saved').textContent = `${data.timeSaved.hours} hrs`;
-      document.getElementById('money-saved').textContent = data.timeSaved.moneySaved;
-      
-      // Update progress bars
-      document.getElementById('response-rate-progress').textContent = `${data.messageStats.responseRate}%`;
-      document.getElementById('response-rate-bar').style.width = `${data.messageStats.responseRate}%`;
-      
-      // Initialize charts
-      initializeCharts(data);
-    }
-    
-    // Initialize charts with data
-    function initializeCharts(data) {
-      // Response rate donut chart
-      const responseRateCtx = document.getElementById('responseRateChart').getContext('2d');
-      new Chart(responseRateCtx, {
-        type: 'doughnut',
-        data: {
-          labels: ['Responses', 'No Response'],
-          datasets: [{
-            data: [data.messageStats.responseRate, 100 - data.messageStats.responseRate],
-            backgroundColor: [
-              getComputedStyle(document.documentElement).getPropertyValue('--accent-purple'),
-              getComputedStyle(document.documentElement).getPropertyValue('--bg-secondary')
-            ],
-            borderWidth: 0,
-            cutout: '70%'
-          }]
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          plugins: {
-            legend: {
-              display: false
-            },
-            tooltip: {
-              callbacks: {
-                label: function(context) {
-                  return `${context.label}: ${context.raw}%`;
-                }
-              }
-            }
-          }
-        }
-      });
-      
-      // Message performance line chart
-      const messagePerformanceCtx = document.getElementById('messagePerformanceChart').getContext('2d');
-      new Chart(messagePerformanceCtx, {
-        type: 'line',
-        data: {
-          labels: data.monthlyData.labels,
-          datasets: [
-            {
-              label: 'Sent',
-              data: data.monthlyData.sent,
-              borderColor: getComputedStyle(document.documentElement).getPropertyValue('--accent-blue'),
-              backgroundColor: 'rgba(58, 134, 255, 0.1)',
-              tension: 0.4,
-              fill: true
-            },
-            {
-              label: 'Responses',
-              data: data.monthlyData.responses,
-              borderColor: getComputedStyle(document.documentElement).getPropertyValue('--accent-green'),
-              backgroundColor: 'rgba(0, 214, 143, 0.1)',
-              tension: 0.4,
-              fill: true
-            }
-          ]
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          scales: {
-            y: {
-              beginAtZero: true,
-              grid: {
-                color: 'rgba(255, 255, 255, 0.05)'
-              },
-              ticks: {
-                color: 'rgba(255, 255, 255, 0.7)'
-              }
-            },
-            x: {
-              grid: {
-                display: false
-              },
-              ticks: {
-                color: 'rgba(255, 255, 255, 0.7)'
-              }
-            }
-          },
-          plugins: {
-            legend: {
-              display: false
-            }
-          }
-        }
-      });
-      
-      // Platform comparison bar chart
-      const platformComparisonCtx = document.getElementById('platformComparisonChart').getContext('2d');
-      new Chart(platformComparisonCtx, {
-        type: 'bar',
-        data: {
-          labels: data.platformPerformance.map(p => p.platform),
-          datasets: [
-            {
-              label: 'Sent',
-              data: data.platformPerformance.map(p => p.sent),
-              backgroundColor: getComputedStyle(document.documentElement).getPropertyValue('--accent-purple'),
-              barPercentage: 0.6,
-              categoryPercentage: 0.7
-            },
-            {
-              label: 'Responses',
-              data: data.platformPerformance.map(p => p.responses),
-              backgroundColor: getComputedStyle(document.documentElement).getPropertyValue('--accent-pink'),
-              barPercentage: 0.6,
-              categoryPercentage: 0.7
-            }
-          ]
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          scales: {
-            y: {
-              beginAtZero: true,
-              grid: {
-                color: 'rgba(255, 255, 255, 0.05)'
-              },
-              ticks: {
-                color: 'rgba(255, 255, 255, 0.7)'
-              }
-            },
-            x: {
-              grid: {
-                display: false
-              },
-              ticks: {
-                color: 'rgba(255, 255, 255, 0.7)'
-              }
-            }
-          },
-          plugins: {
-            legend: {
-              position: 'top',
-              labels: {
-                color: 'rgba(255, 255, 255, 0.7)',
-                boxWidth: 12,
-                padding: 15
-              }
-            }
-          }
-        }
-      });
-      
-      // Monthly activity chart
-      const monthlyActivityCtx = document.getElementById('monthlyActivityChart').getContext('2d');
-      new Chart(monthlyActivityCtx, {
-        type: 'line',
-        data: {
-          labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
-          datasets: [
-            {
-              label: 'Activity',
-              data: [30, 45, 60, 70, 65, 80, 95, 85, 90, 100, 110, 120],
-              borderColor: getComputedStyle(document.documentElement).getPropertyValue('--accent-pink'),
-              backgroundColor: 'rgba(255, 0, 153, 0.1)',
-              tension: 0.4,
-              fill: true
-            }
-          ]
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          scales: {
-            y: {
-              beginAtZero: true,
-              grid: {
-                color: 'rgba(255, 255, 255, 0.05)'
-              },
-              ticks: {
-                color: 'rgba(255, 255, 255, 0.7)'
-              }
-            },
-            x: {
-              grid: {
-                display: false
-              },
-              ticks: {
-                color: 'rgba(255, 255, 255, 0.7)'
-              }
-            }
-          },
-          plugins: {
-            legend: {
-              display: false
-            }
-          }
-        }
-      });
-    }
-    
-    // Show notification to user
+
     function showNotification(message, type = 'info') {
-      // Create notification element
       const notification = document.createElement('div');
       notification.className = `notification ${type}`;
       notification.textContent = message;
       
-      // Add to document
       document.body.appendChild(notification);
       
-      // Position it
-      notification.style.position = 'fixed';
-      notification.style.bottom = '20px';
-      notification.style.right = '20px';
-      notification.style.padding = '12px 20px';
-      notification.style.borderRadius = '8px';
-      notification.style.backgroundColor = type === 'error' ? '#ff6b6b' : 
-                                          type === 'success' ? '#00d68f' : '#3a86ff';
-      notification.style.color = 'white';
-      notification.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.15)';
-      notification.style.zIndex = '1000';
-      notification.style.transition = 'all 0.3s ease';
-      notification.style.opacity = '0';
-      
-      // Animate in
       setTimeout(() => {
         notification.style.opacity = '1';
       }, 10);
       
-      // Remove after delay
       setTimeout(() => {
         notification.style.opacity = '0';
         setTimeout(() => {
-          document.body.removeChild(notification);
+          if (document.body.contains(notification)) {
+            document.body.removeChild(notification);
+          }
         }, 300);
       }, 3000);
     }
   </script>
-  
-  <!-- Dashboard Scripts -->
-  <script src="backend-integration.js"></script>
-  <script src="dashboard.js"></script>
 </body>
 </html>
+
