@@ -552,66 +552,8 @@
     </div>
   </div>
 
-  <script>
-    // Simple navigation functionality
-    document.addEventListener('DOMContentLoaded', function() {
-      console.log('Dashboard loaded successfully!');
-      
-      // Navigation
-      const navItems = document.querySelectorAll('.nav-item');
-      navItems.forEach(item => {
-        item.addEventListener('click', () => {
-          navItems.forEach(nav => nav.classList.remove('active'));
-          item.classList.add('active');
-          
-          const section = item.dataset.section;
-          document.querySelector('.page-title').textContent = 
-            section.charAt(0).toUpperCase() + section.slice(1);
-          
-          if (section !== 'dashboard') {
-            showNotification(`${section.charAt(0).toUpperCase() + section.slice(1)} section would load here`, 'info');
-          }
-        });
-      });
-      
-      // Search functionality
-      const searchInput = document.querySelector('.search-input');
-      if (searchInput) {
-        searchInput.addEventListener('keypress', (e) => {
-          if (e.key === 'Enter') {
-            showNotification(`Searching for: ${searchInput.value}`, 'info');
-            searchInput.value = '';
-          }
-        });
-      }
-      
-      // Show success notification
-      setTimeout(() => {
-        showNotification('Dashboard loaded successfully!', 'success');
-      }, 500);
-    });
+  <script src="index.js"></script>
 
-    function showNotification(message, type = 'info') {
-      const notification = document.createElement('div');
-      notification.className = `notification ${type}`;
-      notification.textContent = message;
-      
-      document.body.appendChild(notification);
-      
-      setTimeout(() => {
-        notification.style.opacity = '1';
-      }, 10);
-      
-      setTimeout(() => {
-        notification.style.opacity = '0';
-        setTimeout(() => {
-          if (document.body.contains(notification)) {
-            document.body.removeChild(notification);
-          }
-        }, 300);
-      }, 3000);
-    }
-  </script>
 </body>
 </html>
 

@@ -22,7 +22,7 @@ let analytics = {};
 function initializeDatabase() {
   return new Promise((resolve) => {
     console.log('Initializing in-memory database...');
-    
+
     // Initialize demo data
     messages = [
       {
@@ -81,7 +81,7 @@ function initializeDatabase() {
         sent_at: new Date(Date.now() - 345600000).toISOString()
       }
     ];
-    
+
     console.log(`Initialized ${messages.length} demo messages`);
     resolve();
   });
@@ -110,7 +110,7 @@ app.get('/api/analytics/dashboard', (req, res) => {
     const totalSent = messages.length;
     const totalResponses = messages.filter(msg => msg.response_received).length;
     const responseRate = totalSent > 0 ? Math.round((totalResponses / totalSent) * 100) : 0;
-    
+
     // Group by platform
     const platformStats = {};
     messages.forEach(msg => {
@@ -122,15 +122,15 @@ app.get('/api/analytics/dashboard', (req, res) => {
         platformStats[msg.platform].responses++;
       }
     });
-    
+
     const platformPerformance = Object.keys(platformStats).map(platform => ({
       platform,
       sent: platformStats[platform].total_sent,
       responses: platformStats[platform].responses,
-      rate: platformStats[platform].total_sent > 0 ? 
+      rate: platformStats[platform].total_sent > 0 ?
         Math.round((platformStats[platform].responses / platformStats[platform].total_sent) * 100) : 0
     }));
-    
+
     // Get recent messages (last 10)
     const recentMessages = messages
       .sort((a, b) => new Date(b.sent_at) - new Date(a.sent_at))
@@ -142,7 +142,7 @@ app.get('/api/analytics/dashboard', (req, res) => {
         time: new Date(msg.sent_at).toLocaleString(),
         status: msg.response_received ? 'received' : 'sent'
       }));
-    
+
     const analytics = {
       messageStats: {
         sent: totalSent,
@@ -162,7 +162,7 @@ app.get('/api/analytics/dashboard', (req, res) => {
         responses: [6, 9, 11, 14, 18, totalResponses]
       }
     };
-    
+
     res.json(analytics);
   } catch (error) {
     console.error('Error generating analytics:', error);
@@ -176,7 +176,7 @@ app.get('/api/messages/recent', (req, res) => {
     const recentMessages = messages
       .sort((a, b) => new Date(b.sent_at) - new Date(a.sent_at))
       .slice(0, 20);
-    
+
     res.json(recentMessages);
   } catch (error) {
     console.error('Error fetching messages:', error);
@@ -187,11 +187,11 @@ app.get('/api/messages/recent', (req, res) => {
 app.post('/api/messages', (req, res) => {
   try {
     const { recipient_name, recipient_email, platform, subject, content } = req.body;
-    
+
     if (!recipient_name || !recipient_email || !platform || !subject || !content) {
       return res.status(400).json({ error: 'Missing required fields' });
     }
-    
+
     const newMessage = {
       id: messages.length + 1,
       recipient_name,
@@ -203,9 +203,9 @@ app.post('/api/messages', (req, res) => {
       response_received: false,
       sent_at: new Date().toISOString()
     };
-    
+
     messages.push(newMessage);
-    
+
     res.json({
       id: newMessage.id,
       message: 'Message sent successfully'
@@ -290,7 +290,7 @@ app.get('/api/platforms/status', (req, res) => {
 });
 
 // Catch-all route for undefined endpoints
-app.use('*', (req, res) => {
+app.use((req, res) => {
   res.status(404).json({
     error: 'Endpoint not found',
     path: req.originalUrl
@@ -311,7 +311,7 @@ async function startServer() {
   try {
     await initializeDatabase();
     await initializeDemoData();
-    
+
     app.listen(PORT, '0.0.0.0', () => {
       console.log(`Co-Founders Outreach Backend Server running on port ${PORT}`);
       console.log(`Health check: http://localhost:${PORT}/api/health`);
