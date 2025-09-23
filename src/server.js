@@ -1,7 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
-
+const open = require('open');
 const app = express();
 const PORT = process.env.PORT || 3030;
 
@@ -316,6 +316,7 @@ async function startServer() {
       console.log(`Co-Founders Outreach Backend Server running on port ${PORT}`);
       console.log(`Health check: http://localhost:${PORT}/api/health`);
       console.log(`Dashboard: http://localhost:${PORT}/dashboard`);
+      open(`http://localhost:${PORT}/dashboard`)
     });
   } catch (error) {
     console.error('Failed to start server:', error);

@@ -3,14 +3,20 @@
   "version": "1.0.0",
   "description": "Co-Founders Automated Reach Out Tool - Desktop Application",
   "main": "main.js",
+  "bin": "src/server.js",
+  "pkg": {
+    "assets": [
+      "dashboard/**/*"
+    ]
+  },
   "scripts": {
-    "start": "electron .",
+    "start": "node src/server.js",
     "dev": "nodemon src/server.js",
     "server": "node src/server.js",
-    "build": "electron-builder",
     "build:win": "electron-builder --win",
     "build:mac": "electron-builder --mac",
-    "build:linux": "electron-builder --linux"
+    "build:linux": "electron-builder --linux",
+    "package": "pkg . --targets node18-win-x64,node18-macos-x64"
   },
   "author": "Co-Founders Team",
   "license": "MIT",
@@ -67,7 +73,8 @@
   "devDependencies": {
     "electron": "^28.3.3",
     "electron-builder": "^24.13.3",
-    "nodemon": "^3.0.1"
+    "nodemon": "^3.0.1",
+    "pkg": "^5.8.1"
   },
   "dependencies": {
     "body-parser": "^2.2.0",
@@ -75,6 +82,8 @@
     "cors": "^2.8.5",
     "express": "^5.1.0",
     "helmet": "^8.1.0",
-    "morgan": "^1.10.1"
+    "morgan": "^1.10.1",
+    "open": "^8.4.2",
+    "serve-handler": "^6.1.6"
   }
 }
