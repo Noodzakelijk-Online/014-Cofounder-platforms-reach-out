@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,16 +8,102 @@
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap">
   <link rel="stylesheet" href="styles.css">
 </head>
+
+<style>
+.notification {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      padding: 12px 20px;
+      border-radius: 8px;
+      color: white;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      z-index: 1000;
+      transition: all 0.3s ease;
+    }
+
+    .notification.info {
+      background: #3a86ff;
+    }
+
+    .notification.success {
+      background: #00d68f;
+    }
+
+    .notification.error {
+      background: #ff6b6b;
+    }
+
+    .chart-placeholder {
+      height: 200px;
+      background: #2a4a7f;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #8892b0;
+      font-size: 14px;
+    }
+
+
+    .notification-dropdown {
+      position: absolute;
+      top: 60px;
+      /* just below the header */
+      right: 60px;
+      width: 300px;
+      background: #1a1b2e;
+      border: 1px solid #2a4a7f;
+      border-radius: 8px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+      display: none;
+      flex-direction: column;
+      z-index: 1000;
+    }
+
+    .notification-dropdown .dropdown-header {
+      font-weight: 600;
+      padding: 10px 15px;
+      border-bottom: 1px solid #2a4a7f;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .notification-dropdown .clear-btn {
+      background: none;
+      border: none;
+      font-size: 12px;
+      padding: 5px;
+      border-radius: 20px;
+      color: white;
+      background: linear-gradient(135deg, #6C5CE7, #FF0099);
+      cursor: pointer;
+    }
+
+    .notification-dropdown .dropdown-content {
+      max-height: 250px;
+      overflow-y: auto;
+    }
+
+    .notification-dropdown .notification-item {
+      padding: 10px 15px;
+      font-size: 14px;
+    }
+
+    .notification-dropdown .notification-item.unread {
+      background: #2a4a7f;
+    }
+
+    .notification-dropdown .notification-item .time {
+      font-size: 12px;
+      color: #fff;
+      display: block;
+      margin-top: 4px;
+    }
+</style>
+
 <body>
-  <!-- Custom title bar for frameless window -->
-  <div class="title-bar">
-    <div></div>
-    <div class="title-bar-controls">
-      <div class="title-bar-button minimize" id="minimize-btn"></div>
-      <div class="title-bar-button maximize" id="maximize-btn"></div>
-      <div class="title-bar-button close" id="close-btn"></div>
-    </div>
-  </div>
 
   <!-- Sidebar -->
   <div class="sidebar">
@@ -29,155 +116,195 @@
           </linearGradient>
         </defs>
         <circle cx="128" cy="128" r="120" fill="#1A1B2E" />
-        <path fill="url(#logo-gradient)" d="M128,48 C83.81722,48 48,83.81722 48,128 C48,172.18278 83.81722,208 128,208 C172.18278,208 208,172.18278 208,128 C208,83.81722 172.18278,48 128,48 Z M128,188 C94.86339,188 68,161.13661 68,128 C68,94.86339 94.86339,68 128,68 C161.13661,68 188,94.86339 188,128 C188,161.13661 161.13661,188 128,188 Z" />
-        <path fill="url(#logo-gradient)" d="M128,88 C105.90861,88 88,105.90861 88,128 C88,150.09139 105.90861,168 128,168 C150.09139,168 168,150.09139 168,128 C168,105.90861 150.09139,88 128,88 Z" />
+        <path fill="url(#logo-gradient)"
+          d="M128,48 C83.81722,48 48,83.81722 48,128 C48,172.18278 83.81722,208 128,208 C172.18278,208 208,172.18278 208,128 C208,83.81722 172.18278,48 128,48 Z M128,188 C94.86339,188 68,161.13661 68,128 C68,94.86339 94.86339,68 128,68 C161.13661,68 188,94.86339 188,128 C188,161.13661 161.13661,188 128,188 Z" />
+        <path fill="url(#logo-gradient)"
+          d="M128,88 C105.90861,88 88,105.90861 88,128 C88,150.09139 105.90861,168 128,168 C150.09139,168 168,150.09139 168,128 C168,105.90861 150.09139,88 128,88 Z" />
         <circle cx="128" cy="128" r="20" fill="#FFFFFF" />
       </svg>
       <span class="logo-text">Co-Founders</span>
     </div>
-    
+
     <div class="nav-menu">
       <div class="nav-item">
         <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
         </svg>
         <span class="nav-text">Dashboard</span>
       </div>
-      
+
       <div class="nav-item">
         <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
         </svg>
         <span class="nav-text">Messages</span>
       </div>
-      
+
       <div class="nav-item">
         <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
         </svg>
         <span class="nav-text">Compose</span>
       </div>
-      
+
       <div class="nav-item">
         <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
         </svg>
         <span class="nav-text">Analytics</span>
       </div>
-      
+
       <div class="nav-item">
         <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
         </svg>
         <span class="nav-text">Billing</span>
       </div>
-      
+
       <div class="nav-item active">
         <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
         </svg>
         <span class="nav-text">Settings</span>
       </div>
     </div>
-    
-    <div class="user-profile">
+
+    <a href="settings.html" class="user-profile" style="text-decoration: none; color: inherit;">
       <div class="user-avatar">JD</div>
       <div class="user-info">
         <div class="user-name">John Doe</div>
         <div class="user-role">Admin</div>
       </div>
-    </div>
+    </a>
   </div>
 
   <!-- Main content -->
   <div class="main-content">
+
     <div class="header">
       <h1 class="page-title">Settings</h1>
-      
+
       <div class="header-actions">
         <div class="search-bar">
-          <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+          <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+            stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
           </svg>
           <input type="text" class="search-input" placeholder="Search settings...">
         </div>
-        
+
         <div class="notification-icon">
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
           </svg>
           <div class="notification-badge">3</div>
         </div>
+
+        <div class="notification-dropdown" id="notificationDropdown">
+          <div class="dropdown-header">
+            Notifications
+            <button id="clearNotifications" class="clear-btn">Clear All</button>
+          </div>
+          <div class="dropdown-content">
+            <div class="notification-item unread">
+              <p><strong>New Message</strong> from Jane Smith</p>
+              <span class="time">2m ago</span>
+            </div>
+            <div class="notification-item">
+              <p><strong>System Update</strong> completed successfully</p>
+              <span class="time">1h ago</span>
+            </div>
+            <div class="notification-item">
+              <p><strong>Billing Reminder:</strong> Your subscription renews tomorrow</p>
+              <span class="time">3h ago</span>
+            </div>
+          </div>
+        </div>
+
       </div>
     </div>
-    
+
     <!-- Settings content -->
     <div class="settings-container">
       <!-- Settings navigation -->
       <div class="settings-nav">
         <div class="settings-nav-item active" data-target="account">
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
           </svg>
           <span>Account</span>
         </div>
-        
+
         <div class="settings-nav-item" data-target="platforms">
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9" />
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9" />
           </svg>
           <span>Platforms</span>
         </div>
-        
+
         <div class="settings-nav-item" data-target="messaging">
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
           </svg>
           <span>Messaging</span>
         </div>
-        
+
         <div class="settings-nav-item" data-target="notifications">
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
           </svg>
           <span>Notifications</span>
         </div>
-        
+
         <div class="settings-nav-item" data-target="appearance">
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01" />
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01" />
           </svg>
           <span>Appearance</span>
         </div>
-        
+
         <div class="settings-nav-item" data-target="advanced">
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
           </svg>
           <span>Advanced</span>
         </div>
       </div>
-      
+
       <!-- Settings content panels -->
       <div class="settings-content">
         <!-- Account settings -->
         <div class="settings-panel active" id="account-panel">
           <h2 class="settings-panel-title">Account Settings</h2>
-          
+
           <div class="settings-section">
             <h3 class="settings-section-title">Profile Information</h3>
-            
+
             <div class="form-group">
               <label for="fullName">Full Name</label>
               <input type="text" id="fullName" value="John Doe" class="form-control">
             </div>
-            
+
             <div class="form-group">
               <label for="email">Email Address</label>
               <input type="email" id="email" value="john.doe@example.com" class="form-control">
             </div>
-            
+
             <div class="form-group">
               <label for="role">Role</label>
               <select id="role" class="form-control">
@@ -187,16 +314,16 @@
               </select>
             </div>
           </div>
-          
+
           <div class="settings-section">
             <h3 class="settings-section-title">Time & Money Settings</h3>
-            
+
             <div class="form-group">
               <label for="hourlyRate">Hourly Rate ($)</label>
               <input type="number" id="hourlyRate" value="50" class="form-control">
               <div class="form-help">Used to calculate money saved by automation</div>
             </div>
-            
+
             <div class="form-group">
               <label for="timezone">Timezone</label>
               <select id="timezone" class="form-control">
@@ -208,25 +335,25 @@
               </select>
             </div>
           </div>
-          
+
           <div class="settings-section">
             <h3 class="settings-section-title">Security</h3>
-            
+
             <div class="form-group">
               <label for="currentPassword">Current Password</label>
               <input type="password" id="currentPassword" placeholder="Enter current password" class="form-control">
             </div>
-            
+
             <div class="form-group">
               <label for="newPassword">New Password</label>
               <input type="password" id="newPassword" placeholder="Enter new password" class="form-control">
             </div>
-            
+
             <div class="form-group">
               <label for="confirmPassword">Confirm New Password</label>
               <input type="password" id="confirmPassword" placeholder="Confirm new password" class="form-control">
             </div>
-            
+
             <div class="form-group">
               <div class="toggle-switch">
                 <input type="checkbox" id="twoFactorAuth" checked>
@@ -234,20 +361,20 @@
               </div>
             </div>
           </div>
-          
+
           <div class="settings-actions">
             <button class="btn btn-secondary">Cancel</button>
             <button class="btn btn-primary">Save Changes</button>
           </div>
         </div>
-        
+
         <!-- Platforms settings -->
         <div class="settings-panel" id="platforms-panel">
           <h2 class="settings-panel-title">Platform Settings</h2>
-          
+
           <div class="settings-section">
             <h3 class="settings-section-title">Connected Platforms</h3>
-            
+
             <div class="platform-card">
               <div class="platform-info">
                 <div class="platform-logo starthawk"></div>
@@ -264,7 +391,7 @@
                 <button class="btn btn-sm btn-outline">Disconnect</button>
               </div>
             </div>
-            
+
             <div class="platform-card">
               <div class="platform-info">
                 <div class="platform-logo cofounderslab"></div>
@@ -281,18 +408,19 @@
                 <button class="btn btn-sm btn-outline">Disconnect</button>
               </div>
             </div>
-            
+
             <button class="btn btn-secondary btn-block">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="16" height="16">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="16"
+                height="16">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
               </svg>
               Connect New Platform
             </button>
           </div>
-          
+
           <div class="settings-section">
             <h3 class="settings-section-title">Account Type Settings</h3>
-            
+
             <div class="form-group">
               <label>StartHawk Account Type</label>
               <div class="radio-group">
@@ -306,7 +434,7 @@
                 </div>
               </div>
             </div>
-            
+
             <div class="form-group">
               <label>CoFoundersLab Account Type</label>
               <div class="radio-group">
@@ -321,18 +449,165 @@
               </div>
             </div>
           </div>
-          
+
           <div class="settings-actions">
             <button class="btn btn-secondary">Cancel</button>
             <button class="btn btn-primary">Save Changes</button>
           </div>
         </div>
-        
-        <!-- Other settings panels would be implemented similarly -->
-      </div>
-    </div>
-  </div>
 
-  <script src="settings.js"></script>
+        <!-- Other settings panels would be implemented similarly -->
+
+        <!-- Messaging settings -->
+        <div class="settings-panel" id="messaging-panel">
+          <h2 class="settings-panel-title">Messaging Settings</h2>
+
+          <div class="settings-section">
+            <h3 class="settings-section-title">General Messaging</h3>
+            <div class="form-group">
+              <div class="toggle-switch">
+                <input type="checkbox" id="enableMessaging" checked>
+                <label for="enableMessaging">Enable Messaging</label>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="defaultReply">Default Reply Message</label>
+              <textarea id="defaultReply" class="form-control" placeholder="Enter your default reply..."></textarea>
+              <div class="form-help">This reply will be used if you don’t respond within 24 hours.</div>
+            </div>
+          </div>
+
+          <div class="settings-section">
+            <h3 class="settings-section-title">Signature</h3>
+            <div class="form-group">
+              <label for="signature">Message Signature</label>
+              <textarea id="signature" class="form-control">Best regards, John Doe</textarea>
+            </div>
+          </div>
+
+          <div class="settings-actions">
+            <button class="btn btn-secondary">Cancel</button>
+            <button class="btn btn-primary">Save Changes</button>
+          </div>
+        </div>
+
+        <!-- Notifications settings -->
+        <div class="settings-panel" id="notifications-panel">
+          <h2 class="settings-panel-title">Notification Settings</h2>
+
+          <div class="settings-section">
+            <h3 class="settings-section-title">Email Notifications</h3>
+            <div class="form-group">
+              <div class="toggle-switch">
+                <input type="checkbox" id="emailUpdates" checked>
+                <label for="emailUpdates">Receive product updates</label>
+              </div>
+            </div>
+            <div class="form-group">
+              <div class="toggle-switch">
+                <input type="checkbox" id="emailReminders">
+                <label for="emailReminders">Receive activity reminders</label>
+              </div>
+            </div>
+          </div>
+
+          <div class="settings-section">
+            <h3 class="settings-section-title">Push Notifications</h3>
+            <div class="form-group">
+              <div class="toggle-switch">
+                <input type="checkbox" id="pushNewMessages" checked>
+                <label for="pushNewMessages">New messages</label>
+              </div>
+            </div>
+            <div class="form-group">
+              <div class="toggle-switch">
+                <input type="checkbox" id="pushMentions">
+                <label for="pushMentions">Mentions & Tags</label>
+              </div>
+            </div>
+          </div>
+
+          <div class="settings-actions">
+            <button class="btn btn-secondary">Cancel</button>
+            <button class="btn btn-primary">Save Changes</button>
+          </div>
+        </div>
+
+        <!-- Appearance settings -->
+        <div class="settings-panel" id="appearance-panel">
+          <h2 class="settings-panel-title">Appearance Settings</h2>
+
+          <div class="settings-section">
+            <h3 class="settings-section-title">Theme</h3>
+            <div class="form-group">
+              <label>Choose Theme</label>
+              <div class="radio-group">
+                <div class="radio-option">
+                  <input type="radio" id="themeLight" name="theme" checked>
+                  <label for="themeLight">Light</label>
+                </div>
+                <div class="radio-option">
+                  <input type="radio" id="themeDark" name="theme">
+                  <label for="themeDark">Dark</label>
+                </div>
+                <div class="radio-option">
+                  <input type="radio" id="themeAuto" name="theme">
+                  <label for="themeAuto">System Default</label>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="settings-section">
+            <h3 class="settings-section-title">Font Size</h3>
+            <div class="form-group">
+              <label for="fontSize">Select Font Size</label>
+              <select id="fontSize" class="form-control">
+                <option value="small">Small</option>
+                <option value="medium" selected>Medium</option>
+                <option value="large">Large</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="settings-actions">
+            <button class="btn btn-secondary">Cancel</button>
+            <button class="btn btn-primary">Save Changes</button>
+          </div>
+        </div>
+
+        <!-- Advanced settings -->
+        <div class="settings-panel" id="advanced-panel">
+          <h2 class="settings-panel-title">Advanced Settings</h2>
+
+          <div class="settings-section">
+            <h3 class="settings-section-title">Data Management</h3>
+            <div class="form-group">
+              <button class="btn btn-outline">Export Data</button>
+              <button class="btn btn-outline">Import Data</button>
+            </div>
+          </div>
+
+          <div class="settings-section">
+            <h3 class="settings-section-title">Danger Zone</h3>
+            <div class="form-group">
+              <button class="btn btn-danger">Delete Account</button>
+              <div class="form-help">This action cannot be undone.</div>
+            </div>
+          </div>
+
+          <div class="settings-actions">
+            <button class="btn btn-secondary">Cancel</button>
+            <button class="btn btn-primary">Save Changes</button>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+    <script src="settings.js"></script>
 </body>
+
 </html>

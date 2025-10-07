@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Compose</title>
+<link
+  href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+  rel="stylesheet"
+/>
+<link rel="stylesheet" href="styles.css">
+<style>
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: #1a1b2e;
+    color: #fff;
+    overflow-x: hidden;
+  }
+
+  /* Container */
+  .dashboard-container {
+    display: flex;
+    height: 100vh;
+    width: 100%;
+  }
+
+  /* Main Content */
+  .main-content {
+    margin-left: 250px;
+    flex-grow: 1;
+    background: #1a1b2e;
+    padding: 20px;
+    overflow-y: auto;
+    height: 100vh;
+  }
+
+  h2 {
+    margin-bottom: 20px;
+  }
+
+  /* Compose form styles */
+  .compose-form input,
+  .compose-form textarea {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border-radius: 5px;
+    background: #2c2f55;
+    border: 1px solid #444;
+    color: #fff;
+    font-size: 1rem;
+    resize: vertical;
+  }
+
+  .compose-form input::placeholder,
+  .compose-form textarea::placeholder {
+    color: #bbb;
+  }
+
+  .compose-form button {
+    padding: 10px 15px;
+    background-color: #1abc9c;
+    border: none;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+  }
+
+  .compose-form button:hover {
+    background-color: #16a085;
+  }
+</style>
+</head>
+<body>
+  <div class="dashboard-container">
+    <!-- Sidebar -->
+    <div class="sidebar">
+      <div class="logo-container">
+        <svg class="logo" viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="logo-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#6C5CE7" />
+              <stop offset="100%" stop-color="#FF0099" />
+            </linearGradient>
+          </defs>
+          <circle cx="128" cy="128" r="120" fill="#1A1B2E" />
+          <path
+            fill="url(#logo-gradient)"
+            d="M128,48 C83.81722,48 48,83.81722 48,128 C48,172.18278 83.81722,208 128,208 C172.18278,208 208,172.18278 208,128 C208,83.81722 172.18278,48 128,48 Z M128,188 C94.86339,188 68,161.13661 68,128 C68,94.86339 94.86339,68 128,68 C161.13661,68 188,94.86339 188,128 C188,161.13661 161.13661,188 128,188 Z"
+          />
+          <path
+            fill="url(#logo-gradient)"
+            d="M128,88 C105.90861,88 88,105.90861 88,128 C88,150.09139 105.90861,168 128,168 C150.09139,168 168,150.09139 168,128 C168,105.90861 150.09139,88 128,88 Z"
+          />
+          <circle cx="128" cy="128" r="20" fill="#FFFFFF" />
+        </svg>
+        <span class="logo-text">Co-Founders</span>
+      </div>
+
+      <div class="nav-menu">
+        <div class="nav-item">
+          <svg class="nav-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
+          </svg>
+          <span class="nav-text">Dashboard</span>
+        </div>
+
+        <div class="nav-item">
+          <svg class="nav-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"/>
+          </svg>
+          <span class="nav-text">Messages</span>
+        </div>
+
+        <div class="nav-item active">
+          <svg class="nav-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+          </svg>
+          <span class="nav-text">Compose</span>
+        </div>
+
+        <div class="nav-item">
+          <svg class="nav-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+          </svg>
+          <span class="nav-text">Analytics</span>
+        </div>
+
+        <div class="nav-item">
+          <svg class="nav-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
+            <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+          </svg>
+          <span class="nav-text">Settings</span>
+        </div>
+      </div>
+
+      <a href="settings.html" class="user-profile" style="text-decoration: none; color: inherit;">
+      <div class="user-avatar">JD</div>
+      <div class="user-info">
+        <div class="user-name">John Doe</div>
+        <div class="user-role">Admin</div>
+      </div>
+    </a>
+    </div>
+
+    <!-- Main content -->
+    <div class="main-content">
+      <h2>Compose New Message</h2>
+      <div class="compose-form">
+        <input type="text" placeholder="Recipient Name" />
+        <textarea placeholder="Your message..." rows="6"></textarea>
+        <button>Send Message</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="index.js"></script>
+</body>
+</html>
